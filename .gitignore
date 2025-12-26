@@ -1,0 +1,11 @@
+# Node/Next/TypeScript
+node_modules
+.next
+out
+.cache
+coverage
+dist
+temp
+.DS_Store
+.vscode/.history
+.env*
