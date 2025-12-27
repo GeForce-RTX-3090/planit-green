@@ -1,0 +1,8 @@
+{
+"name": "@planit/config",
+"version": "0.1.0",
+"private": false,
+"type": "module",
+"exports": { ".": "./v1.json" },
+"scripts": { "build": "echo nothing to build", "lint": "echo skip", "typecheck": "echo skip" }
+}

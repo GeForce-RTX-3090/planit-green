@@ -1,0 +1,11 @@
+{
+"version": "v1",
+"weights": {
+"overall": { "sustainability": 0.35, "health": 0.35, "price": 0.30 },
+"health": { "sugar": 0.5, "sat_fat": 0.3, "additives": 0.2 },
+"sustainability": { "packaging": 0.5, "origin": 0.3, "certs": 0.2 }
+},
+"packaging_base": { "glass":85, "hdpe":75, "tetra-pack":60, "pet":55, "other":50 },
+"recyclability_bonus": { "widely_recycled":15, "check_local":5, "not_recycled":0 },
+"origin_scale": { "same_country":90, "neighboring_country":75, "intra_europe":65, "intercontinental":40 }
+}

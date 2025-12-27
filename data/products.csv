@@ -1,0 +1,2 @@
+product_id,retailer,brand,product_name,size_ml,price_gbp,unit_price_gbp_per_litre,url,barcode,last_seen_at_utc
+example-oat-drink-1l,Tesco,Acme,Oat Drink 1L,1000,1.80,1.80,https://www.tesco.com/example,7310865071474,2025-12-26T10:30:00Z
