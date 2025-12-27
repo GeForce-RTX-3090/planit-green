@@ -1,20 +1,40 @@
-name: ci
+name: CI
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # ✅ 1. Install pnpm FIRST
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # ✅ 2. Setup Node + pnpm cache
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
-      - run: corepack enable
-      - run: pnpm -v
-      - run: pnpm i
-      - run: pnpm -r build
-      - run: pnpm -r typecheck
+          cache: pnpm
+
+      # ✅ 3. Install deps
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ✅ 4. Build all packages
+      - name: Build
+        run: pnpm -r build
+
+      # ✅ 5. Typecheck
+      - name: Typecheck
+        run: pnpm -r typecheck
