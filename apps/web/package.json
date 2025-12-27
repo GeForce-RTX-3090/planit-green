@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm --dir ../.. --filter @planit/core build && pnpm --dir ../.. --filter @planit/config build && next build",
+    "build": "pnpm --filter @planit/core build && pnpm --filter @planit/config build && next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@planit/config": "file:..\\..\\packages\\planit-config",
-    "@planit/core": "file:..\\..\\packages\\planit-core",
+    "@planit/config": "workspace:*",
+    "@planit/core": "workspace:*",
     "csv-parse": "^6.1.0",
     "next": "16.1.1",
     "react": "19.2.3",
