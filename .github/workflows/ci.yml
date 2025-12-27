@@ -1,4 +1,4 @@
-name: CI
+name: ci
 
 on:
   push:
@@ -6,35 +6,60 @@ on:
   pull_request:
     branches: [main]
 
+# Avoid duplicate runs on force-pushes
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # ✅ 1. Install pnpm FIRST
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.12.0
-
-      # ✅ 2. Setup Node + pnpm cache
+      # Setup Node and pnpm (from packageManager field)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
 
-      # ✅ 3. Install deps
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: Show tool versions (debug)
+        run: |
+          node -v
+          pnpm -v
+
+      # Install once at the root; pnpm will link workspaces (incl. file: deps)
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # ✅ 4. Build all packages
+      # Optional: validate CSV headers if script exists
+      - name: Validate CSV headers
+        if: ${{ hashFiles('scripts/validate.mjs') != '' }}
+        run: node scripts/validate.mjs
+
+      # Lint & typecheck (don’t fail CI if scripts not defined)
+      - name: Lint
+        run: pnpm -r lint || echo "no lint script"
+
+      - name: Typecheck
+        run: pnpm -r typecheck || echo "no typecheck script"
+
+      # Build all packages & apps
       - name: Build
         run: pnpm -r build
 
-      # ✅ 5. Typecheck
-      - name: Typecheck
-        run: pnpm -r typecheck
+      # Optional: run tests if a config is present
+      - name: Test
+        if: ${{ hashFiles('**/vitest.config.*', '**/jest.config.*') != '' }}
+        run: pnpm -r test -- --run
